@@ -1,4 +1,8 @@
 <?php
+require '../tools/helpers.php';
+require  '../models/Datacharts.php';
+$datacharts = new Datacharts();
+
 
 if (isset($_GET['operacion'])){
   if ($_GET['operacion'] == 'getdata'){
@@ -37,8 +41,13 @@ if (isset($_GET['operacion'])){
       "Covid" =>[2,1,46,8]
     ];
 
-    echo json_encode($datosMin);
+    renderJSON($datosMin);
   }
+
+  if ($_GET['operacion'] == 'listGB') {
+    renderJSON($datacharts->listGB(["publisher_id" => $_GET['publisher_id']]));
+  }
+
 }
 
 ?>

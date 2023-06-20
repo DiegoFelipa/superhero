@@ -116,4 +116,80 @@ SELECT * FROM superhero
 
 CALL spu_racebyids('3,4,');
 
-				
+SELECT * FROM superhero; -- x750
+SELECT * FROM alignment; -- x4
+SELECT * FROM publisher; -- x25
+
+-- Consultas de resumen (GROUP BY)
+-- Subconsultas (SELECT > SELECT)
+
+-- ¿Cuantos superheroes son buenos, malos, neutrales o N/A?
+SELECT 
+	CASE
+		WHEN ALG.`alignment` IS NULL THEN 'Ninguno'
+		WHEN ALG.`alignment` IS NOT NULL THEN ALG.`alignment`
+	END 'bandos',
+	COUNT(SPH.id) 'total'
+	FROM superhero SPH
+	LEFT JOIN alignment ALG ON ALG.`id` = SPH.`alignment_id`
+	GROUP BY ALG.`alignment`;
+	
+-- ¿Cuantos superheroes tenemos en una coleccion de casas/publisher indicadas manualmente por el usuario
+
+SELECT 
+	CASE
+		WHEN PBS.publisher_name = '' THEN 'No asignado'
+		WHEN PBS.publisher_name !='' THEN PBS.publisher_name
+	END 'casas',
+	COUNT(SPH.id) 'total'
+	FROM superhero SPH
+	LEFT JOIN publisher PBS ON PBS.`id` = SPH.`publisher_id`
+	WHERE SPH.`publisher_id` IN (1,4,9,15)
+	GROUP BY PBS.publisher_name;
+	
+-- Hallar el promedio de pesos y estatura por los superheroes de las razas especificadas manualmente por el usuario
+SELECT 
+	RAC.race,
+	AVG(SPH.weight_kg) 'pesoprom',
+	AVG(SPH.height_cm) 'estaturaprom',
+	MAX(SPH.weight_kg) 'pesomax',
+	MIN(SPH.weight_kg) 'pesomin'
+	FROM superhero SPH
+	LEFT JOIN race RAC ON RAC.id = SPH.race_id
+	WHERE SPH.race_id IN (5,8,9)
+	GROUP BY RAC.race;
+	
+SELECT COUNT(sph.alignment_id) 'Total'
+	FROM superhero sph
+	
+	LEFT JOIN publisher pbs ON sph.publisher_id = pbs.id
+	WHERE sph.publisher_id IN (1,2)
+	ORDER BY sph.alignment_id;
+	
+
+
+SELECT 
+	CASE
+		WHEN ALG.`alignment` IS NULL THEN 'Ninguno'
+		WHEN ALG.`alignment` IS NOT NULL THEN ALG.`alignment`
+	END 'bandos',
+	COUNT(SPH.id) 'total'
+	FROM alignment ALG
+	LEFT JOIN superhero SPH ON ALG.`id` = SPH.`alignment_id` = SPH.publisher_id = 3
+	WHERE ALG.id IN (1,2)
+	GROUP BY ALG.`alignment`;	
+		
+	
+DELIMITER $$
+CREATE PROCEDURE spu_alignment_publisher(IN _publisher INT)
+BEGIN
+	SELECT 
+		ALG.alignment 'bandos',
+		COUNT(SPH.id) 'total'
+		FROM alignment ALG
+		LEFT JOIN superhero SPH ON ALG.`id` = SPH.`alignment_id` AND SPH.publisher_id = _publisher
+		WHERE ALG.id IN (1,2)
+		GROUP BY ALG.alignment;
+END $$
+
+CALL spu_alignment_publisher(3)

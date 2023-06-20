@@ -82,7 +82,7 @@
           labels: etiquetas,
           datasets: [{
             label: 'Dengue',
-            data: [15,40,32,56],
+            data: [50,40,32,56],
             backgroundColor: coloresFondo,
             borderWidth: borde,
             borderColor: coloresBorde
@@ -90,12 +90,21 @@
           },
           {
             label: 'Covid',
-            data: [21,58,64,2],
+            data: [31,58,64,30],
             backgroundColor: coloresFondo,
             borderWidth: borde,
             borderColor: coloresBorde
           }
           ]
+        },
+        options:{
+          responive: true,
+          legend: {position: 'bottom'},
+          
+          title: {
+            display: true,
+            text: 'Hospital de chincha'
+          }
         }
       });
 
@@ -114,7 +123,11 @@
         fetch(`../controllers/datacharts.php?operacion=getdata`)
           .then(respuesta => respuesta.json())
           .then(datos=>{
-            console.log(datos)
+            grafico.data.datasets[0].data = datos.Dengue;
+            grafico.data.datasets[1].data = datos.Covid;
+            grafico.data.datasets[0].label = "Dengue 2023";
+            grafico.data.datasets[1].label = "Covid 2023";
+            grafico.update();
           });
       })
     })

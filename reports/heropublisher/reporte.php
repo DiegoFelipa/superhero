@@ -13,13 +13,13 @@ try {
 
   $superhero = new SuperHero();
 
-  $datos = $superhero->getMultirace(["race_ids" => $_GET['id']]);
+  $datos = $superhero->listByPublisher(["publisher_id" => $_GET['publisher_id']]);
 
   //Contenido (HTML) que renderizaremos como PDF
   
   $content = "";
   
-  //$titulo = $_GET['titulo'];
+  $titulo = $_GET['titulo'];
 
   //Iniciamos la creación del binario
   ob_start();

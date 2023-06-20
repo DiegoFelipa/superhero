@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+</head>
+
+<body>
+  
+  <div class="container mt-3">
+    <form action="" autocomplete="off">
+      <div class="row">
+        <div class="col-md-11">
+          <select name="casas" id="casas" class="form-select">
+            <option value="">Seleccione</option>
+          </select>
+        </div>
+        <div class="col-md-1">
+          <button class="btn btn-primary" type="button" id="obtener">Obtener</button>
+        </div>
+       
+      </div>
+    </form>
+
+    <div>
+      <canvas id="migrafico"></canvas>
+    </div>
+  </div>
+
+  <!-- ChartJS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      selectCasas = document.querySelector("#casas");
+      //Objeto canvas
+      const lienzo = document.getElementById("migrafico")
+      const btnObtener = document.querySelector("#obtener")
+
+      //Construir un gráfico
+      //Chart(lienzo,datos,configuración-opcional)
+      const etiquetas = ['Bueno','Malo'];
+      const coloresFondo = ['rgba(133, 206, 75, 0.6)','rgba(43, 174, 131, 0.6)','rgba(224, 4, 65, 0.6)','rgba(243, 127, 78, 0.6)'];
+      const coloresBorde = ['rgb(133, 206, 75)','rgb(43, 174, 131)','rgb(224, 4, 65)','rgb(243, 127, 78)'];
+      const borde = 2;
+      const grafico = new Chart(lienzo,{
+        type:'bar',
+        data: {
+          labels: etiquetas,
+          datasets: [{
+            label: 'Alineacion',
+            data: [20,40],
+            backgroundColor: coloresFondo,
+            borderWidth: borde,
+            borderColor: coloresBorde
+
+          }
+          ]
+        },
+        options:{
+          scales:{
+            y:{
+              min: 0,
+              max: 300
+            }
+          },
+          plugins:{
+            title:{
+              display:true,
+              text: 'Buenos y malos por casas'
+            },
+            responsive:true,
+            legends:{
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      function getPublishers(){
+        fetch(`../controllers/publisher.php?operacion=listar`)
+          .then(respuesta=>respuesta.json())
+          .then(datos=>{
+            datos.forEach(element => {
+              const optionTag = document.createElement("option")
+              optionTag.value = element.id;
+              optionTag.text = element.publisher_name;
+              selectCasas.appendChild(optionTag);
+            });
+          });
+      }
+      
+      btnObtener.addEventListener("click", ()=>{
+        const parametros = new URLSearchParams();
+        parametros.append("operacion","listGB");
+        parametros.append("publisher_id", parseInt(selectCasas.value));
+        fetch(`../controllers/datacharts.php?${parametros}`)
+          .then(respuesta => respuesta.json())
+          .then(datos=>{
+            console.log(datos)
+            grafico.data.datasets[0].data[0] = datos.Bad;
+            grafico.data.datasets[0].data[1] = datos.Good;
+
+            grafico.update();
+          });
+      })
+
+      getPublishers();
+    })
+  </script>
+</body>
+
+</html>
