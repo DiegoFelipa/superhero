@@ -181,15 +181,28 @@ SELECT
 		
 	
 DELIMITER $$
-CREATE PROCEDURE spu_alignment_publisher(IN _publisher INT)
+CREATE PROCEDURE spu_alignment_publisher(IN _publisher_id INT)
 BEGIN
 	SELECT 
 		ALG.alignment 'bandos',
 		COUNT(SPH.id) 'total'
 		FROM alignment ALG
-		LEFT JOIN superhero SPH ON ALG.`id` = SPH.`alignment_id` AND SPH.publisher_id = _publisher
+		LEFT JOIN superhero SPH ON ALG.`id` = SPH.`alignment_id` AND SPH.publisher_id = _publisher_id
 		WHERE ALG.id IN (1,2)
 		GROUP BY ALG.alignment;
 END $$
 
 CALL spu_alignment_publisher(3)
+
+
+BEGIN
+	SELECT 
+		ALG.alignment 'bandos',
+		COUNT(SPH.id) 'total'
+		FROM alignment ALG
+		LEFT JOIN superhero SPH ON ALG.`id` = SPH.`alignment_id` AND SPH.publisher_id = _publisher_id
+		WHERE ALG.id IN (1,2)
+		GROUP BY ALG.alignment;
+END $$
+
+

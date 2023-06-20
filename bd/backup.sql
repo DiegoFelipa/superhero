@@ -1230,6 +1230,24 @@ BEGIN
 END */$$
 DELIMITER ;
 
+/* Procedure structure for procedure `spu_alignment_publisher` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `spu_alignment_publisher` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_alignment_publisher`(in _publisher_id int)
+begin
+	select 
+		ALG.alignment 'bandos',
+		count(SPH.id) 'total'
+		from alignment ALG
+		LEFT JOIN superhero SPH ON ALG.`id` = SPH.`alignment_id` AND SPH.publisher_id = _publisher_id
+		where ALG.id in (1,2)
+		group by ALG.alignment;
+end */$$
+DELIMITER ;
+
 /* Procedure structure for procedure `spu_byalignment_list` */
 
 /*!50003 DROP PROCEDURE IF EXISTS  `spu_byalignment_list` */;
@@ -1332,7 +1350,7 @@ BEGIN
 		LEFT JOIN race RAC ON SPH.race_id = RAC.id 
 		LEFT JOIN publisher PBS ON PBS.`id` = SPH.`publisher_id`
 		WHERE FIND_IN_SET(SPH.race_id, _race_ids) > 0 
-	ORDER BY SPH.superhero_name ASC ,SPH.race_id ASC; 
+	ORDER BY SPH.race_id ASC, SPH.superhero_name ASC ; 
 END */$$
 DELIMITER ;
 
@@ -1445,6 +1463,26 @@ begin
 		where sh.publisher_id = _publisher_id
 		ORDER BY sh.`id`;
 	end */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `sp_getAlignment_publisher` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `sp_getAlignment_publisher` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getAlignment_publisher`( 
+	IN _publisher INT 
+)
+BEGIN 
+	SELECT 
+	a.alignment 'Bandos', 
+	COUNT(s.id) 'Total' 
+	FROM alignment a
+	LEFT JOIN superhero s ON a.id = s.alignment_id AND s.publisher_id = _publisher
+	WHERE a.id IN (1, 2)
+	GROUP BY a.alignment; 
+END */$$
 DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
