@@ -11,6 +11,7 @@
       <col style="width: 30%;">
       <col style="width: 15%;">
       <col style="width: 15%;">
+      <col style="width: 15%;">
     </colgroup>
     <thead>
       <tr class="bg-info">
@@ -19,17 +20,18 @@
         <th>Nombre</th>
         <th>Color ojos</th>
         <th>Color cabello</th>
-  
+        <th>Color Piel</th>
       </tr>
     </thead>
     <tbody>
       <?php foreach($datos as $registro):?>
         <tr>
           <td><?=$registro['id'] ?></td>
-          <td><?=$registro['publisher_name'] ?></td>
           <td><?=$registro['superhero_name'] ?></td>
           <td><?=$registro['full_name'] ?></td>
-          <td><?=$registro['race'] ?></td>
+          <td><?=$registro['eye_colour'] ?></td>
+          <td><?=$registro['hair_colour'] ?></td>
+          <td><?=$registro['skin_colour'] ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

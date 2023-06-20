@@ -110,12 +110,9 @@
               */
 
               function getByPublisher(){
-                
                 const parametros = new URLSearchParams();
-
                 parametros.append("operacion","listarCasas");
                 parametros.append("publisher_id", parseInt(selectCasas.value));
-
                 fetch(`../controllers/superhero.php?${parametros}`)
                   .then(respuesta => respuesta.json())
                   .then(datos => {

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+</head>
+
+<body>
+  
+  <div class="container mt-3">
+    <form action="" autocomplete="off">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="text" placeholder="Arequipa" maxlength="3" class="form-control" id="arequipa">
+            <label for="arequipa">Arequipa</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="text" placeholder="Ica" maxlength="3" class="form-control" id="ica">
+            <label for="">Ica</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="text" placeholder="Lima" maxlength="3" class="form-control" id="lima">
+            <label for="lima">Lima</label>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-floating">
+            <input type="text" placeholder="Ayacucho" maxlength="3" class="form-control" id="ayacucho">
+            <label for="ayacucho">Ayacucho</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-primary" type="button" id="mostrar">Mostrar</button>
+          <button class="btn btn-primary" type="button" id="obtener">Obtener</button> 
+        </div>
+       
+      </div>
+    </form>
+
+    <div>
+      <canvas id="migrafico"></canvas>
+    </div>
+  </div>
+
+  <!-- ChartJS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      //Objeto canvas
+      const lienzo = document.getElementById("migrafico")
+      
+      const txtArq = document.querySelector("#arequipa")
+      const txtIca = document.querySelector("#ica")
+      const txtLma = document.querySelector("#lima")
+      const txtAyc = document.querySelector("#ayacucho")
+      const btnMostrar = document.querySelector("#mostrar")
+      const btnObtener = document.querySelector("#obtener")
+
+      //Construir un gráfico
+      //Chart(lienzo,datos,configuración-opcional)
+      const etiquetas = ['Arequipa', 'Ica', 'Lima', 'Ayacucho'];
+      const coloresFondo = ['rgba(133, 206, 75, 0.6)','rgba(43, 174, 131, 0.6)','rgba(224, 4, 65, 0.6)','rgba(243, 127, 78, 0.6)'];
+      const coloresBorde = ['rgb(133, 206, 75)','rgb(43, 174, 131)','rgb(224, 4, 65)','rgb(243, 127, 78)'];
+      const borde = 2;
+      const grafico = new Chart(lienzo,{
+        type:'bar',
+        data: {
+          labels: etiquetas,
+          datasets: [{
+            label: 'Dengue',
+            data: [15,40,32,56],
+            backgroundColor: coloresFondo,
+            borderWidth: borde,
+            borderColor: coloresBorde
+
+          },
+          {
+            label: 'Covid',
+            data: [21,58,64,2],
+            backgroundColor: coloresFondo,
+            borderWidth: borde,
+            borderColor: coloresBorde
+          }
+          ]
+        }
+      });
+
+      btnMostrar.addEventListener("click", ()=>{
+        const nuevosDatos = [
+          parseInt(txtArq.value),
+          parseInt(txtIca.value),
+          parseInt(txtLma.value),
+          parseInt(txtAyc.value)
+        ];
+        grafico.data.datasets[0].data= nuevosDatos;
+        grafico.update();
+      });
+      
+      btnObtener.addEventListener("click", ()=>{
+        fetch(`../controllers/datacharts.php?operacion=getdata`)
+          .then(respuesta => respuesta.json())
+          .then(datos=>{
+            console.log(datos)
+          });
+      })
+    })
+  </script>
+</body>
+
+</html>

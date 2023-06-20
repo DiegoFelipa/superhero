@@ -11,7 +11,7 @@
 
     public function listAll(){
       try{
-        $consulta =$this->conexion->prepare("CALL spu_race_list()");
+        $consulta=$this->conexion->prepare("CALL spu_race_list()");
         $consulta->execute();
         return  $consulta->fetchAll(PDO::FETCH_ASSOC);
       }

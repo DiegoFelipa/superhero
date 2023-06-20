@@ -109,11 +109,11 @@ BEGIN
 		LEFT JOIN race RAC ON SPH.race_id = RAC.id 
 		LEFT JOIN publisher PBS ON PBS.`id` = SPH.`publisher_id`
 		WHERE FIND_IN_SET(SPH.race_id, _race_ids) > 0 
-	ORDER BY SPH.superhero_name ASC ,SPH.race_id ASC; 
+	ORDER BY SPH.race_id ASC, SPH.superhero_name ASC ; 
 END $$
 
 SELECT * FROM superhero
 
-CALL spu_racebyids('3,4');
+CALL spu_racebyids('3,4,');
 
 				

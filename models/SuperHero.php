@@ -33,5 +33,18 @@
       }
     }
 
+    public function getMultirace($data=[]){
+      try{
+        $consulta = $this->conexion->prepare("CALL spu_racebyids(?)");
+        $consulta->execute(
+            array(
+              $data['race_ids']
+            ));
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+      }
+      catch(Exception $e){
+        die($e->getMessage());
+      }
+    }
 
   }

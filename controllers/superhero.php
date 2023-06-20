@@ -11,6 +11,10 @@ if (isset($_GET['operacion'])){
   if ($_GET['operacion'] == 'listarRazas'){
     renderJSON($superhero->listByRace(["race_id" => $_GET['race_id']]));
   }
+
+  if($_GET['operacion'] == 'multirace'){
+    renderJSON($superhero->getMultirace(["race_ids" => $_GET['id']]));
+  }
 }
 
 ?>
