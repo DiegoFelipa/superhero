@@ -76,37 +76,65 @@
       const coloresFondo = ['rgba(133, 206, 75, 0.6)','rgba(43, 174, 131, 0.6)','rgba(224, 4, 65, 0.6)','rgba(243, 127, 78, 0.6)'];
       const coloresBorde = ['rgb(133, 206, 75)','rgb(43, 174, 131)','rgb(224, 4, 65)','rgb(243, 127, 78)'];
       const borde = 2;
-      const grafico = new Chart(lienzo,{
-        type:'bar',
-        data: {
-          labels: etiquetas,
-          datasets: [{
-            label: 'Dengue',
-            data: [50,40,32,56],
-            backgroundColor: coloresFondo,
-            borderWidth: borde,
-            borderColor: coloresBorde
 
+      let valMin = 0;
+      let valMax = 100;
+      let titulo = "Reporte 2023";
+      let grafico = null;
+
+
+      
+      //Crear el objeto 
+      function getConfig(valMin,valMax,titulo){
+        let configOpciones = {
+          scales:{
+              y:{
+                min: valMin,
+                max: valMax
+              }
+            },
+            plugins:{
+              title:{
+                display:true,
+                text: titulo
+              },
+              responsive:true,
+              legends:{
+                position: 'bottom'
+            }
+          }
+        };
+        return configOpciones;
+      }
+
+      //Constuye gráfico CHARTJS
+      function renderGrafico(){
+          grafico = new Chart(lienzo,{
+          type:'bar',
+          data: {
+            labels: etiquetas,
+            datasets: [{
+              label: 'Dengue',
+              data: [50,40,32,56],
+              backgroundColor: coloresFondo,
+              borderWidth: borde,
+              borderColor: coloresBorde
+
+            },
+            {
+              label: 'Covid',
+              data: [31,58,64,30],
+              backgroundColor: coloresFondo,
+              borderWidth: borde,
+              borderColor: coloresBorde
+            }
+            ]
           },
-          {
-            label: 'Covid',
-            data: [31,58,64,30],
-            backgroundColor: coloresFondo,
-            borderWidth: borde,
-            borderColor: coloresBorde
-          }
-          ]
-        },
-        options:{
-          responive: true,
-          legend: {position: 'bottom'},
-          
-          title: {
-            display: true,
-            text: 'Hospital de chincha'
-          }
-        }
-      });
+          options: configOpciones,
+        });
+      }
+           
+      renderGrafico();
 
       btnMostrar.addEventListener("click", ()=>{
         const nuevosDatos = [
@@ -115,8 +143,10 @@
           parseInt(txtLma.value),
           parseInt(txtAyc.value)
         ];
+
         grafico.data.datasets[0].data= nuevosDatos;
         grafico.update();
+        
       });
       
       btnObtener.addEventListener("click", ()=>{
